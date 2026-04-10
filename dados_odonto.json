@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "ultima_atualizacao": "10/04/2026 22:21",
+    "status": "sucesso"
+  },
+  "evoluçãoGeral": [
+    {
+      "ano": "2025",
+      "receita": 1627.32,
+      "despesaAssistencial": 0.0,
+      "sinistralidade": 0.0,
+      "combinado": 4.6
+    }
+  ],
+  "dadosSegmentacaoOdonto": [
+    {
+      "nome": "Empresarial",
+      "rec2025": 1139.13,
+      "share2025": 70.0,
+      "sin2025": 42.1
+    },
+    {
+      "nome": "Individual",
+      "rec2025": 325.46,
+      "share2025": 20.0,
+      "sin2025": 48.5
+    },
+    {
+      "nome": "Adesão",
+      "rec2025": 162.73,
+      "share2025": 10.0,
+      "sin2025": 45.2
+    }
+  ]
+}
