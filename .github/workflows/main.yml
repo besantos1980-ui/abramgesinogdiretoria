@@ -1,0 +1,32 @@
+name: Atualizar Dados ANS
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Roda toda segunda-feira à meia-noite
+  workflow_dispatch: # Permite rodar manualmente clicando em um botão
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar Dependências
+        run: pip install pandas requests
+
+      - name: Executar Processamento
+        run: python process_ans.py
+
+      - name: Commit e Push dos Dados
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dados_odonto.json
+          git commit -m "Update: Dados ANS Odonto automatic update [skip ci]" || exit 0
+          git push
