@@ -1,0 +1,16 @@
+{
+  "evoluçãoGeral": [
+    {
+      "ano": "2024",
+      "receita": 305.98,
+      "despesaAssistencial": 245.81,
+      "sinistralidade": 80.3
+    },
+    {
+      "ano": "2025",
+      "receita": 336.4,
+      "despesaAssistencial": 265.64,
+      "sinistralidade": 79.0
+    }
+  ]
+}
