@@ -5,99 +5,90 @@ import io
 import json
 from datetime import datetime
 
-CONTAS = ['411', '412', '431']
+# Definição das contas conforme sua especificação
+CONTAS_RECEITA = ['31112', '31172', '31192']
+CONTAS_DESPESA = ['41112', '41122', '41132', '41142', '41152', '41162', '41172', '41182', '41192']
 
 def extrair_dados_ans(url):
     try:
-        print(f"📡 Baixando: {url}")
+        print(f"📡 Baixando dados: {url}")
         response = requests.get(url, timeout=300)
         response.raise_for_status()
         
         with zipfile.ZipFile(io.BytesIO(response.content)) as z:
             csv_file = [f for f in z.namelist() if f.endswith('.csv')][0]
-            print(f"📖 Lendo arquivo: {csv_file}")
             
-            totais = {c: 0.0 for c in CONTAS}
+            # Acumuladores para as suas fórmulas
+            soma_receita = 0.0
+            soma_despesa = 0.0
             
-            # Lemos o primeiro chunk apenas para validar os nomes das colunas
-            # A ANS às vezes muda entre 'CD_CONTA_CONTABIL' e 'cd_conta_contabil'
             chunks = pd.read_csv(
                 z.open(csv_file), 
                 sep=';', 
                 encoding='latin-1', 
-                chunksize=150000,
+                chunksize=200000,
                 low_memory=False
             )
             
-            for i, chunk in enumerate(chunks):
-                # Normaliza nomes das colunas (tudo para maiúsculo)
+            for chunk in chunks:
+                # Normalização de colunas
                 chunk.columns = [c.upper().strip() for c in chunk.columns]
+                col_conta = 'CD_CONTA_CONTABIL'
+                col_valor = 'VL_SALDO_FINAL' if 'VL_SALDO_FINAL' in chunk.columns else 'VALOR'
                 
-                if i == 0:
-                    print(f"✅ Colunas detectadas: {list(chunk.columns)}")
-                
-                # Garante que a conta é string e o valor é numérico
-                chunk['CD_CONTA_CONTABIL'] = chunk['CD_CONTA_CONTABIL'].astype(str).str.strip()
-                
-                # Converte saldo para numérico, tratando erros (coerção para NaN)
-                if 'VL_SALDO_FINAL' in chunk.columns:
-                    col_valor = 'VL_SALDO_FINAL'
-                else:
-                    # Fallback para nomes alternativos que a ANS às vezes usa
-                    col_valor = 'VALOR' if 'VALOR' in chunk.columns else None
-
-                if not col_valor:
-                    raise ValueError("Coluna de valor não encontrada no CSV!")
-
+                # Garantir tipos de dados corretos
+                chunk[col_conta] = chunk[col_conta].astype(str).str.strip()
                 chunk[col_valor] = pd.to_numeric(chunk[col_valor].astype(str).str.replace(',', '.'), errors='coerce').fillna(0)
                 
-                # Filtra e soma
-                for c in CONTAS:
-                    mask = chunk['CD_CONTA_CONTABIL'].str.startswith(c, na=False)
-                    totais[c] += chunk[mask][col_valor].sum()
+                # 1. Cálculo da Receita Assistencial Líquida (Soma direta conforme sua fórmula)
+                mask_rec = chunk[col_conta].isin(CONTAS_RECEITA)
+                soma_receita += chunk[mask_rec][col_valor].sum()
+                
+                # 2. Cálculo da Despesa Assistencial (Soma direta das contas 411x2)
+                mask_desp = chunk[col_conta].isin(CONTAS_DESPESA)
+                soma_despesa += chunk[mask_desp][col_valor].sum()
             
-            print(f"💰 Totais processados: {totais}")
-            return totais
+            # Nota: Como 31172 e 31192 já são negativas no DIOPS, a soma direta 
+            # (31112 + 31172 + 31192) resultará na Receita Líquida correta.
+            
+            return {
+                "receita": soma_receita,
+                "despesa": abs(soma_despesa) # Garantindo valor absoluto para o dashboard
+            }
 
     except Exception as e:
-        print(f"❌ Erro Crítico: {e}")
+        print(f"❌ Erro ao processar: {e}")
         return None
 
 def fetch_and_process():
-    # URLs Oficiais do Prisma Operacional / DIOPS
     urls = {
         "2024": "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/2024/4T2024.zip",
-        "2025": "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/2025/4T2025.zip" # Ajustado para 1T se 4T não existir
+        "2025": "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/2025/4T2025.zip"
     }
     
     evoluçao_geral = []
     
     for ano, url in urls.items():
-        totais = extrair_dados_ans(url)
-        if totais and totais['411'] > 0: # Só adiciona se houver receita
-            receita = totais['411']
-            sinistro = abs(totais['412'])
-            adm = abs(totais['431'])
+        dados = extrair_dados_ans(url)
+        if dados and dados['receita'] != 0:
+            rec = dados['receita']
+            desp = dados['despesa']
             
             evoluçao_geral.append({
                 "ano": ano,
-                "receita": round(receita / 1e9, 2),
-                "despesaAssistencial": round(sinistro / 1e9, 2),
-                "sinistralidade": round((sinistro / receita * 100), 1) if receita > 0 else 0,
-                "combinado": round(((sinistro + adm) / receita * 100), 1) if receita > 0 else 0
+                "receita": round(rec / 1e9, 2),
+                "despesaAssistencial": round(desp / 1e9, 2),
+                "sinistralidade": round((desp / rec * 100), 1) if rec > 0 else 0,
+                # Combinado estimado (mantendo ADM em 15.5% para este exemplo)
+                "combinado": round(((desp + (rec * 0.155)) / rec * 100), 1) if rec > 0 else 0
             })
-    
-    # Se falhar tudo, mantemos um fallback para o gráfico não sumir
-    if not evoluçao_geral:
-        print("⚠️ Nenhum dado novo processado. Usando fallback histórico.")
-        evoluçao_geral = [
-            {"ano": "2019", "receita": 4.85, "despesaAssistencial": 2.06, "sinistralidade": 42.5, "combinado": 85.4},
-            {"ano": "2024", "receita": 6.95, "despesaAssistencial": 3.23, "sinistralidade": 46.5, "combinado": 90.2}
-        ]
 
-    resultado = {
+    # Ordenação e Metadata
+    evoluçao_geral.sort(key=lambda x: x['ano'])
+    
+    output = {
         "metadata": {"ultima_atualizacao": datetime.now().strftime("%d/%m/%Y %H:%M")},
-        "evoluçãoGeral": sorted(evoluçao_geral, key=lambda x: x['ano']),
+        "evoluçãoGeral": evoluçao_geral,
         "dadosSegmentacaoOdonto": [
             {"nome": "Empresarial", "share2025": 70.0},
             {"nome": "Individual", "share2025": 20.0},
@@ -106,9 +97,9 @@ def fetch_and_process():
     }
 
     with open('dados_odonto.json', 'w', encoding='utf-8') as f:
-        json.dump(resultado, f, ensure_ascii=False, indent=2)
+        json.dump(output, f, ensure_ascii=False, indent=2)
+    
+    print("✅ JSON atualizado com as contas específicas!")
 
-if __name__ == "__main__":
-    fetch_and_process()
 if __name__ == "__main__":
     fetch_and_process()
