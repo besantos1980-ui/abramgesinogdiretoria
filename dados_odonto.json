@@ -1,9 +1,23 @@
 {
   "metadata": {
-    "ultima_atualizacao": "10/04/2026 22:21",
-    "status": "sucesso"
+    "ultima_atualizacao": "11/04/2026 00:35",
+    "fonte": "ANS - DIOPS"
   },
   "evoluçãoGeral": [
+    {
+      "ano": "2019",
+      "receita": 4.85,
+      "despesaAssistencial": 2.06,
+      "sinistralidade": 42.5,
+      "combinado": 85.4
+    },
+    {
+      "ano": "2024",
+      "receita": 1505.18,
+      "despesaAssistencial": 0.0,
+      "sinistralidade": 0.0,
+      "combinado": 4.4
+    },
     {
       "ano": "2025",
       "receita": 1627.32,
@@ -15,21 +29,15 @@
   "dadosSegmentacaoOdonto": [
     {
       "nome": "Empresarial",
-      "rec2025": 1139.13,
-      "share2025": 70.0,
-      "sin2025": 42.1
+      "share2025": 70.0
     },
     {
       "nome": "Individual",
-      "rec2025": 325.46,
-      "share2025": 20.0,
-      "sin2025": 48.5
+      "share2025": 20.0
     },
     {
       "nome": "Adesão",
-      "rec2025": 162.73,
-      "share2025": 10.0,
-      "sin2025": 45.2
+      "share2025": 10.0
     }
   ]
 }
