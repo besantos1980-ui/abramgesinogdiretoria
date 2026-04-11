@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
+   steps:
       - name: Checkout do código
         uses: actions/checkout@v3
 
@@ -26,8 +26,10 @@ jobs:
       - name: Executar Processamento Medico
         run: python process_medico.py
 
-      - name: Commit e Push de ambos
+      - name: Commit e Push dos Dados (Ambos)
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add dados_odonto.json dados_medico.json
-          git commit -m "Update: Dados Medico e Odonto [skip ci]" || exit 0
+          git commit -m "Update: Dados ANS Odonto e Medico [skip ci]" || exit 0
           git push
