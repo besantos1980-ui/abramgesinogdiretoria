@@ -67,7 +67,7 @@ def fetch_and_process():
     # URLs Oficiais do Prisma Operacional / DIOPS
     urls = {
         "2024": "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/2024/4T2024.zip",
-        "2025": "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/2025/1T2025.zip" # Ajustado para 1T se 4T não existir
+        "2025": "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/2025/4T2025.zip" # Ajustado para 1T se 4T não existir
     }
     
     evoluçao_geral = []
