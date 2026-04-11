@@ -33,7 +33,13 @@ def extrair_dados_ans(url):
                 for c in CONTAS:
                     valor = df_filtered[df_filtered['CD_CONTA_CONTABIL'].str.startswith(c)]['VL_SALDO_FINAL'].sum()
                     totais[c] += valor
-            
+            for chunk in chunks:
+    # Limpeza: remove espaços e garante que é string
+    chunk['CD_CONTA_CONTABIL'] = chunk['CD_CONTA_CONTABIL'].astype(str).str.strip()
+    
+    # Filtro: garante que estamos pegando as contas 411, 412 e 431
+    mask = chunk['CD_CONTA_CONTABIL'].str.startswith(('411', '412', '431'), na=False)
+    df_filtered = chunk[mask]
             return totais
     except Exception as e:
         print(f"Erro ao processar {url}: {e}")
