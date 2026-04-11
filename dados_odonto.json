@@ -1,21 +1,21 @@
 {
   "metadata": {
-    "ultima_atualizacao": "11/04/2026 02:53"
+    "ultima_atualizacao": "11/04/2026 03:38"
   },
   "evoluçãoGeral": [
     {
       "ano": "2024",
-      "receita": 1505.18,
-      "despesaAssistencial": 0.0,
-      "sinistralidade": 0.0,
-      "combinado": 4.4
+      "receita": 7.77,
+      "despesaAssistencial": 3.16,
+      "sinistralidade": 40.6,
+      "combinado": 56.1
     },
     {
       "ano": "2025",
-      "receita": 1627.32,
-      "despesaAssistencial": 0.0,
-      "sinistralidade": 0.0,
-      "combinado": 4.6
+      "receita": 8.14,
+      "despesaAssistencial": 3.35,
+      "sinistralidade": 41.2,
+      "combinado": 56.7
     }
   ],
   "dadosSegmentacaoOdonto": [
