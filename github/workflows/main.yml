@@ -20,13 +20,16 @@ jobs:
       - name: Instalar Dependências
         run: pip install pandas requests
 
-      - name: Executar Processamento
+      - name: Executar Processamento Odonto
         run: python process_ans.py
 
-      - name: Commit e Push dos Dados
+      - name: Executar Processamento Medico
+        run: python process_medico.py
+
+      - name: Commit e Push dos Dados (Ambos)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add dados_odonto.json
-          git commit -m "Update: Dados ANS Odonto automatic update [skip ci]" || exit 0
+          git add dados_odonto.json dados_medico.json
+          git commit -m "Update: Dados ANS Odonto e Medico [skip ci]" || exit 0
           git push
