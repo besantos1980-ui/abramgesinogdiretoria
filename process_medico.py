@@ -7,7 +7,7 @@ from datetime import datetime
 
 # Regras sugeridas para Medicina (Sufixo 1)
 CONTAS_REC_MED = ['31111', '31171', '31191']
-CONTAS_DESP_MED = [f'411{i}1' for i in range(1, 10)] # 41111 até 41191
+CONTAS_DESP_MED = [f'411{i}1' for i in range(1, 9)] # 41111 até 41191
 
 def extrair_dados_medico(url):
     try:
