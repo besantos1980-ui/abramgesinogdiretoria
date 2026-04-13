@@ -40,5 +40,5 @@ jobs:
           name: relatorios-ans-odonto
           path: |
             dados_odonto.json
-            auditoria_odonto_*.csv
+            auditoria_odonto.csv
    
