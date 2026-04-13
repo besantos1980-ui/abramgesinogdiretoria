@@ -98,7 +98,7 @@ def extrair_dados_ans(ano_rotulo, url, lista_odonto):
                 for k, v in rastreio_receita.items()
             ])
             
-            arquivo_csv = f"auditoria_odonto_{ano_rotulo}.csv"
+            arquivo_csv = f"auditoria_odonto.csv"
             df_check.to_csv(arquivo_csv, sep=';', index=False, encoding='latin-1')
             print(f"📊 Relatório de auditoria salvo em: {arquivo_csv}")
             
@@ -157,7 +157,7 @@ def fetch_and_process():
         json.dump(output, f, ensure_ascii=False, indent=2)
     
     print("\n✅ PROCESSO CONCLUÍDO!")
-    print("-> Verifique os arquivos 'auditoria_odonto_XXXX.csv' para ver as empresas somadas.")
+    print("-> Verifique os arquivos 'auditoria_odonto.csv' para ver as empresas somadas.")
     print("-> 'dados_odonto.json' atualizado para o dashboard.")
 
 if __name__ == "__main__":
