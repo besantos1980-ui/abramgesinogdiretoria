@@ -24,7 +24,7 @@ jobs:
           pip install pandas requests
 
       - name: Executar script de extração
-        run: python seu_script.py  # <--- CERTIFIQUE-SE QUE O NOME DO ARQUIVO .PY ESTÁ CORRETO AQUI
+        run: python process_ans.py  # <--- CERTIFIQUE-SE QUE O NOME DO ARQUIVO .PY ESTÁ CORRETO AQUI
 
       - name: Upload dos resultados (JSON e CSV de Auditoria)
         uses: actions/upload-artifact@v4
