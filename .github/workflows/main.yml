@@ -34,11 +34,11 @@ jobs:
           git commit -m "Update: Dados ANS Odonto e Medico [skip ci]" || exit 0
           git push
 
-      - name: Upload dos resultados para download
-        uses: actions/upload-artifact@v4
-        with:
-          name: relatorios-ans-odonto
-          path: |
-            dados_odonto.json
-            auditoria_odonto.csv
-   
+      - name: Upload dos resultados
+      uses: actions/upload-artifact@v4
+      with:
+        name: relatorios-ans-odonto
+        path: |
+          *.json
+          *.csv
+        if-no-files-found: error # Isso fará a Action falhar se o CSV não existir, avisando o erro
