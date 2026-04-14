@@ -96,4 +96,4 @@ if __name__ == "__main__":
     print("-> 'dados_odonto.json' atualizado para o dashboard.")
 
 if __name__ == "__main__":
-    fetch_and_process()
+    run()
