@@ -3,42 +3,34 @@ name: Atualizar Dados ANS
 on:
   schedule:
     - cron: '0 0 * * 1' # Roda toda segunda-feira à meia-noite
-  workflow_dispatch: # Permite rodar manualmente clicando em um botão
+  workflow_dispatch: # Permite rodar manualmente
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-      - name: Instalar Dependências
-        run: pip install pandas requests
-
-      - name: Executar Processamento Odonto
-        run: python process_ans.py
-
-      - name: Executar Processamento Medico
-        run: python process_medico.py
-
-      - name: Commit e Push dos Dados (Ambos)
+      - name: Instalar dependências
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add dados_odonto.json dados_medico.json
-          git commit -m "Update: Dados ANS Odonto e Medico [skip ci]" || exit 0
-          git push
+          python -m pip install --upgrade pip
+          pip install pandas requests
 
-      - name: Upload dos resultados
-      uses: actions/upload-artifact@v4
-      with:
-        name: relatorios-ans-odonto
-        path: |
-          *.json
-          *.csv
-        if-no-files-found: error # Isso fará a Action falhar se o CSV não existir, avisando o erro
+      - name: Executar script de extração
+        run: python seu_script.py  # <--- CERTIFIQUE-SE QUE O NOME DO ARQUIVO .PY ESTÁ CORRETO AQUI
+
+      - name: Upload dos resultados (JSON e CSV de Auditoria)
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-ans-odonto
+          path: |
+            *.json
+            *.csv
+          if-no-files-found: warn
