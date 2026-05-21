@@ -13,24 +13,23 @@ def extrair_beneficiarios():
     soup = BeautifulSoup(resposta.text, 'html.parser')
     
     arquivos = []
-    # 2. Varremos todos os links e filtramos os de beneficiários
+    # 2. Varremos todos os links e filtramos os que são .zip do SIB ativo
     for link in soup.find_all('a'):
         href = link.get('href')
-        if href and href.startswith('sib_ativo_'):
+        if href and href.startswith('sib_ativo_') and href.endswith('.zip'):
             arquivos.append(url_diretorio + href)
             
     if not arquivos:
-        raise ValueError("Nenhum arquivo sib_ativo_* foi encontrado na página.")
+        raise ValueError("Nenhum arquivo sib_ativo_*.zip foi encontrado na página.")
         
     print(f"Encontrados {len(arquivos)} arquivos estaduais. Processando a contagem...")
     
-    # 3. Formatamos a lista de links para o padrão que o DuckDB entende: ['link1', 'link2']
+    # 3. Formatamos a lista de links para o padrão SQL
     lista_urls_sql = "[" + ", ".join([f"'{url}'" for url in arquivos]) + "]"
     
     con = duckdb.connect('banco_ans.db')
     
-    # 4. Inserimos a lista inteira no read_csv_auto. 
-    # Adicionei ignore_errors=true porque arquivos grandes da ANS sempre têm algumas linhas corrompidas.
+    # 4. Usamos read_csv explícito, definindo o ponto e vírgula e travando erros de encoding
     query = f"""
     CREATE OR REPLACE TABLE porte_operadoras AS
     SELECT 
@@ -41,7 +40,14 @@ def extrair_beneficiarios():
             WHEN COUNT(*) BETWEEN 20000 AND 99999 THEN 'Médio'
             ELSE 'Grande'
         END AS Porte
-    FROM read_csv_auto({lista_urls_sql}, all_varchar=true, ignore_errors=true)
+    FROM read_csv(
+        {lista_urls_sql}, 
+        delim=';', 
+        header=true, 
+        encoding='UTF-8',
+        all_varchar=true, 
+        ignore_errors=true
+    )
     GROUP BY REGISTRO_OPERADORA;
     """
     
