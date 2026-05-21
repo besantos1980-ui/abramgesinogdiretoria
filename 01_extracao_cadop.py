@@ -4,11 +4,11 @@ def extrair_cadop():
     print("Iniciando extração do CADOP...")
     con = duckdb.connect('banco_ans.db')
     
-    # Substituímos read_csv_auto por read_csv e forçamos os parâmetros corretos
+    # Corrigido o nome da coluna para REGISTRO_OPERADORA, conforme padrão da ANS
     query = """
     CREATE OR REPLACE TABLE cadop AS 
     SELECT 
-        CAST(Registro_ANS AS VARCHAR) AS REG_ANS,
+        CAST(REGISTRO_OPERADORA AS VARCHAR) AS REG_ANS,
         Nome_Fantasia,
         Modalidade
     FROM read_csv(
