@@ -1,18 +1,22 @@
 import duckdb
 import requests
 from bs4 import BeautifulSoup
+import os
+import zipfile
 
 def extrair_beneficiarios():
     print("Iniciando contagem de beneficiários (SIB)...")
     
     url_diretorio = "https://dadosabertos.ans.gov.br/FTP/PDA/dados_de_beneficiarios_por_operadora/"
-    print(f"Acessando diretório: {url_diretorio}")
-    
     resposta = requests.get(url_diretorio)
     soup = BeautifulSoup(resposta.text, 'html.parser')
     
+    # Cria uma pasta temporária para salvar os arquivos
+    pasta_temp = 'dados_sib'
+    os.makedirs(pasta_temp, exist_ok=True)
+    
     arquivos = []
-    # Varremos todos os links e filtramos os que são .zip do SIB ativo
+    # Varre os links e pega os ZIPs do SIB ativo
     for link in soup.find_all('a'):
         href = link.get('href')
         if href and href.startswith('sib_ativo_') and href.endswith('.zip'):
@@ -21,13 +25,31 @@ def extrair_beneficiarios():
     if not arquivos:
         raise ValueError("Nenhum arquivo sib_ativo_*.zip foi encontrado na página.")
         
-    print(f"Encontrados {len(arquivos)} arquivos estaduais. Processando a contagem...")
+    print(f"Encontrados {len(arquivos)} arquivos estaduais. Baixando e extraindo localmente...")
     
-    lista_urls_sql = "[" + ", ".join([f"'{url}'" for url in arquivos]) + "]"
+    for url in arquivos:
+        nome_arquivo = url.split('/')[-1]
+        caminho_zip = os.path.join(pasta_temp, nome_arquivo)
+        
+        # Faz o download em pedaços (chunks) para não consumir muita memória RAM
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with open(caminho_zip, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        
+        # Extrai o CSV de dentro do ZIP
+        with zipfile.ZipFile(caminho_zip, 'r') as zip_ref:
+            zip_ref.extractall(pasta_temp)
+            
+        # Apaga o arquivo ZIP original para economizar espaço no GitHub
+        os.remove(caminho_zip)
+        
+    print("Arquivos extraídos. Processando os dados locais com DuckDB...")
     
     con = duckdb.connect('banco_ans.db')
     
-    # Modo "trator" ativado: strict_mode=false, null_padding=true e encoding CP1252
+    # Agora apontamos para os arquivos CSV locais (pasta_temp/*.csv)
     query = f"""
     CREATE OR REPLACE TABLE porte_operadoras AS
     SELECT 
@@ -39,7 +61,7 @@ def extrair_beneficiarios():
             ELSE 'Grande'
         END AS Porte
     FROM read_csv(
-        {lista_urls_sql}, 
+        '{pasta_temp}/*.csv', 
         delim=';', 
         header=true, 
         encoding='CP1252',
