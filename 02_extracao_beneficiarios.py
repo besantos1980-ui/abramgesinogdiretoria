@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 def extrair_beneficiarios():
     print("Iniciando contagem de beneficiários (SIB)...")
     
-    # 1. Lemos a página do diretório da ANS para descobrir os arquivos reais
     url_diretorio = "https://dadosabertos.ans.gov.br/FTP/PDA/dados_de_beneficiarios_por_operadora/"
     print(f"Acessando diretório: {url_diretorio}")
     
@@ -13,7 +12,7 @@ def extrair_beneficiarios():
     soup = BeautifulSoup(resposta.text, 'html.parser')
     
     arquivos = []
-    # 2. Varremos todos os links e filtramos os que são .zip do SIB ativo
+    # Varremos todos os links e filtramos os que são .zip do SIB ativo
     for link in soup.find_all('a'):
         href = link.get('href')
         if href and href.startswith('sib_ativo_') and href.endswith('.zip'):
@@ -24,12 +23,11 @@ def extrair_beneficiarios():
         
     print(f"Encontrados {len(arquivos)} arquivos estaduais. Processando a contagem...")
     
-    # 3. Formatamos a lista de links para o padrão SQL
     lista_urls_sql = "[" + ", ".join([f"'{url}'" for url in arquivos]) + "]"
     
     con = duckdb.connect('banco_ans.db')
     
-    # 4. Usamos read_csv explícito, definindo o ponto e vírgula e travando erros de encoding
+    # Modo "trator" ativado: strict_mode=false, null_padding=true e encoding CP1252
     query = f"""
     CREATE OR REPLACE TABLE porte_operadoras AS
     SELECT 
@@ -44,9 +42,11 @@ def extrair_beneficiarios():
         {lista_urls_sql}, 
         delim=';', 
         header=true, 
-        encoding='UTF-8',
+        encoding='CP1252',
         all_varchar=true, 
-        ignore_errors=true
+        ignore_errors=true,
+        strict_mode=false,
+        null_padding=true
     )
     GROUP BY REGISTRO_OPERADORA;
     """
