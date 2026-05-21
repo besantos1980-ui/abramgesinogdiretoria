@@ -1,0 +1,38 @@
+name: Rotina Semanal ANS
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Roda toda segunda-feira às 03:00 UTC
+  workflow_dispatch: # Permite rodar o script manualmente clicando num botão
+
+jobs:
+  extrair_e_processar:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Baixar o código do repositório
+      uses: actions/checkout@v3
+
+    - name: Configurar o Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar bibliotecas
+      run: |
+        pip install duckdb requests beautifulsoup4 pandas
+
+    - name: Executar Pipeline (Ordem Estrita)
+      run: |
+        python 01_extracao_cadop.py
+        python 02_extracao_beneficiarios.py
+        python 03_extracao_contabil.py
+        python 04_consolidacao.py
+
+    - name: Fazer commit dos novos dados (JSON e CSV)
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action Bot"
+        git add dashboard.json auditoria.csv
+        # Só faz o commit se houver alguma mudança nos arquivos
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Rotina automatizada: Atualização dos dados da ANS" && git push)
