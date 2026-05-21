@@ -4,6 +4,9 @@ def extrair_beneficiarios():
     print("Iniciando contagem de beneficiários (SIB)...")
     con = duckdb.connect('banco_ans.db')
     
+    # Comando de configuração que libera o uso do curinga (*) em links HTTP
+    con.execute("SET allow_asterisks_in_http_paths = true;")
+    
     query = """
     CREATE OR REPLACE TABLE porte_operadoras AS
     SELECT 
