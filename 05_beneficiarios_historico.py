@@ -25,7 +25,7 @@ def atualizar_historico_beneficiarios():
         COALESCE(p.Porte, 'Sem Informação') AS Porte,
         
         -- Aqui puxamos a soma de vidas que o SIB gerou no passo 02
-        SUM(p.Total_Beneficiarios) AS Beneficiarios_Ativos
+        SUM(p.total_vidas) AS Beneficiarios_Ativos
         
     FROM porte_operadoras p
     INNER JOIN cadop cd ON p.REG_ANS = cd.REG_ANS
