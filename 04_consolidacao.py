@@ -5,7 +5,7 @@ def consolidar_dados():
     print("Iniciando cruzamento de dados...")
     con = duckdb.connect('banco_ans.db')
     
-    # 1. Gerar arquivo de Auditoria
+    # 1. Gerar arquivo de Auditoria (Apenas contas de interesse)
     query_auditoria = """
     COPY (
         SELECT 
@@ -14,13 +14,14 @@ def consolidar_dados():
             c.CD_CONTA_CONTABIL,
             c.SALDO_TRIMESTRE,
             CASE WHEN cd.REG_ANS IS NOT NULL THEN 'ATIVA' ELSE 'INATIVA' END AS Status_Auditoria
-        FROM contabilidade c
+        FROM contabilidade_bruta c
         LEFT JOIN cadop cd ON c.REG_ANS = cd.REG_ANS
+        WHERE c.CD_CONTA_CONTABIL IN ('311', '312', '313', '32', '411', '412')
     ) TO 'auditoria.csv' (HEADER, DELIMITER ';');
     """
     con.execute(query_auditoria)
     
-    # 2. Gerar dados agregados para o Dashboard
+    # 2. Gerar dados agregados para o Dashboard (Com Igualdade Exata)
     query_dashboard = """
     SELECT 
         c.DATA,
@@ -31,14 +32,26 @@ def consolidar_dados():
         END AS Visao,
         cd.Modalidade,
         COALESCE(p.Porte, 'Sem Informação') AS Porte,
-        SUM(CASE WHEN c.CD_CONTA_CONTABIL LIKE '311%' OR c.CD_CONTA_CONTABIL LIKE '312%' 
-                   OR c.CD_CONTA_CONTABIL LIKE '313%' OR c.CD_CONTA_CONTABIL LIKE '32%' 
-                 THEN c.SALDO_TRIMESTRE ELSE 0 END) AS Contraprestacoes_Efetivas,
-        SUM(CASE WHEN c.CD_CONTA_CONTABIL LIKE '411%' OR c.CD_CONTA_CONTABIL LIKE '412%' 
-                 THEN c.SALDO_TRIMESTRE ELSE 0 END) AS Eventos_Indenizaveis
+        
+        -- Contraprestações Efetivas: IGUALDADE EXATA
+        SUM(CASE 
+            WHEN c.CD_CONTA_CONTABIL IN ('311', '312', '313', '32') 
+            THEN c.SALDO_TRIMESTRE ELSE 0 
+        END) AS Contraprestacoes_Efetivas,
+        
+        -- Eventos Indenizáveis Líquidos: IGUALDADE EXATA
+        SUM(CASE 
+            WHEN c.CD_CONTA_CONTABIL IN ('411', '412') 
+            THEN c.SALDO_TRIMESTRE ELSE 0 
+        END) AS Eventos_Indenizaveis
+        
     FROM contabilidade_bruta c
     INNER JOIN cadop cd ON c.REG_ANS = cd.REG_ANS
     LEFT JOIN porte_operadoras p ON c.REG_ANS = p.REG_ANS
+    
+    -- Filtra a base inteira antes de agrupar para ganhar performance
+    WHERE c.CD_CONTA_CONTABIL IN ('311', '312', '313', '32', '411', '412')
+    
     GROUP BY c.DATA, Visao, cd.Modalidade, Porte
     HAVING Visao != 'Outros';
     """
