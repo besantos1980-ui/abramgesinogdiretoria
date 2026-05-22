@@ -52,9 +52,13 @@ jobs:
         
         # 5. Só faz o commit se houver alguma mudança
         git diff --quiet && git diff --staged --quiet || (git commit -m "Rotina automatizada: Atualização dos dados da ANS" && git push)
-
+ 
     - name: Salvar arquivos gerados no repositório
       run: |
+          # 1. Limpa o "Big Data" bruto para não travar o servidor do GitHub
+          rm -rf dados_contabeis dados_sib banco_ans.db
+          
+          # 2. Configura o Git e salva apenas os relatórios finais que sobraram
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           git add -A
