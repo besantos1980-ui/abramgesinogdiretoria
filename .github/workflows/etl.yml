@@ -52,3 +52,11 @@ jobs:
         
         # 5. Só faz o commit se houver alguma mudança
         git diff --quiet && git diff --staged --quiet || (git commit -m "Rotina automatizada: Atualização dos dados da ANS" && git push)
+
+    - name: Salvar arquivos gerados no repositório
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git add dashboard.json beneficiarios.json auditoria.csv resultado_operadoras.xlsx historico_acumulado_rob.csv
+        git commit -m "Atualização automática dos dados da ANS [skip ci]" || echo "Nenhuma alteração detectada"
+        git push
