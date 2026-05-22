@@ -36,7 +36,7 @@ def consolidar_dados():
                  THEN c.SALDO_TRIMESTRE ELSE 0 END) AS Contraprestacoes_Efetivas,
         SUM(CASE WHEN c.CD_CONTA_CONTABIL LIKE '411%' OR c.CD_CONTA_CONTABIL LIKE '412%' 
                  THEN c.SALDO_TRIMESTRE ELSE 0 END) AS Eventos_Indenizaveis
-    FROM contabilidade c
+    FROM contabilidade_bruta c
     INNER JOIN cadop cd ON c.REG_ANS = cd.REG_ANS
     LEFT JOIN porte_operadoras p ON c.REG_ANS = p.REG_ANS
     GROUP BY c.DATA, Visao, cd.Modalidade, Porte
