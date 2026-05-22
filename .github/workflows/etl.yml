@@ -33,6 +33,7 @@ jobs:
         python 02_extracao_beneficiarios.py
         python 03_extracao_contabil.py
         python 04_consolidacao.py
+        python 05_beneficiarios_historico.py
 
     - name: Fazer commit dos novos dados (JSON e ZIP)
       run: |
