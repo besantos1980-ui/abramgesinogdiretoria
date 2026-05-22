@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import re
 import os
 import zipfile
+import pandas as pd
 
 def descobrir_ultimo_ano():
     url = "https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/"
@@ -19,7 +20,7 @@ def descobrir_ultimo_ano():
             
     return max(anos) if anos else None
 
-def extrair_contabilidade():
+def processar_contabilidade():
     ano_recente = descobrir_ultimo_ano()
     if not ano_recente:
         raise ValueError("Não foi possível determinar o ano mais recente.")
@@ -27,7 +28,6 @@ def extrair_contabilidade():
     print(f"Extraindo dados contábeis do ano: {ano_recente}...")
     url_base = f"https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/{ano_recente}/"
     
-    # Busca a lista de trimestres (T1, T2, T3, T4) dentro da pasta do ano
     response = requests.get(url_base)
     soup = BeautifulSoup(response.text, 'html.parser')
     
@@ -40,7 +40,6 @@ def extrair_contabilidade():
     if not arquivos_zip:
         raise ValueError(f"Nenhum arquivo .zip encontrado na pasta de {ano_recente}.")
         
-    # Prepara a pasta temporária para a contabilidade
     pasta_temp = 'dados_contabeis'
     os.makedirs(pasta_temp, exist_ok=True)
     
@@ -61,18 +60,16 @@ def extrair_contabilidade():
             
         os.remove(caminho_zip)
     
-    print("Processando dados contábeis locais...")
+    print("Iniciando motor analítico no DuckDB...")
     con = duckdb.connect('banco_ans.db')
     
-    # Processa todos os arquivos CSV extraídos na pasta. 
-    # Forçamos all_varchar=true para blindar contra os erros de padrão contábil da ANS (311711X1)
-    # Lógica customizada baseada na Lei 9656 (Saúde Suplementar) e DIOPS.
-    query = f"""
-    CREATE OR REPLACE TABLE contabilidade AS 
+    # 1. Carrega toda a base sem perdas
+    query_importacao = f"""
+    CREATE OR REPLACE TABLE contabilidade_bruta AS 
     SELECT 
         DATA,
-        CAST(REG_ANS AS VARCHAR) AS REG_ANS,
-        CAST(CD_CONTA_CONTABIL AS VARCHAR) AS CD_CONTA_CONTABIL,
+        TRIM(CAST(REG_ANS AS VARCHAR)) AS REG_ANS,
+        TRIM(CAST(CD_CONTA_CONTABIL AS VARCHAR)) AS CD_CONTA_CONTABIL,
         (COALESCE(CAST(REPLACE(VL_SALDO_FINAL, ',', '.') AS DOUBLE), 0) - 
          COALESCE(CAST(REPLACE(VL_SALDO_INICIAL, ',', '.') AS DOUBLE), 0)) AS SALDO_TRIMESTRE
     FROM read_csv(
@@ -81,14 +78,56 @@ def extrair_contabilidade():
         header=true, 
         encoding='CP1252',
         all_varchar=true, 
-        ignore_errors=true,
-        strict_mode=false,
-        null_padding=true
+        quote='"',          
+        escape='"',         
+        ignore_errors=true  
     )
     """
-    con.execute(query)
-    print("Dados contábeis extraídos e processados com sucesso.")
+    con.execute(query_importacao)
+
+    # 2. Aplica a Regra de Negócio: Filtro por Operadora (REG_ANS) e agrupamento das contas exatas
+    # A cláusula NOT LIKE '%00' evita a soma das contas "mães" (nível sintético) do plano de contas
+    query_financas = """
+    WITH CalculoContas AS (
+        SELECT 
+            DATA,
+            REG_ANS,
+            
+            -- Contraprestações Efetivas (311, 312, 313, 32)
+            SUM(CASE 
+                WHEN (CD_CONTA_CONTABIL LIKE '311%' 
+                   OR CD_CONTA_CONTABIL LIKE '312%' 
+                   OR CD_CONTA_CONTABIL LIKE '313%' 
+                   OR CD_CONTA_CONTABIL LIKE '32%')
+                   AND CD_CONTA_CONTABIL NOT LIKE '%00' 
+                THEN SALDO_TRIMESTRE ELSE 0 
+            END) AS Contraprestacoes_Efetivas,
+            
+            -- Eventos Indenizáveis Líquidos (411, 412)
+            SUM(CASE 
+                WHEN (CD_CONTA_CONTABIL LIKE '411%' 
+                   OR CD_CONTA_CONTABIL LIKE '412%')
+                   AND CD_CONTA_CONTABIL NOT LIKE '%00' 
+                THEN SALDO_TRIMESTRE ELSE 0 
+            END) AS Eventos_Indenizaveis
+            
+        FROM contabilidade_bruta
+        GROUP BY DATA, REG_ANS
+    )
+    SELECT * 
+    FROM CalculoContas
+    WHERE Contraprestacoes_Efetivas <> 0 OR Eventos_Indenizaveis <> 0
+    ORDER BY REG_ANS, DATA;
+    """
+
+    print("Calculando Contraprestações e Eventos Indenizáveis por Operadora...")
+    df_auditoria = con.execute(query_financas).df()
+    
+    arquivo_excel = "resultado_operadoras.xlsx"
+    df_auditoria.to_excel(arquivo_excel, index=False)
+    
+    print(f"SUCESSO! Os dados calculados por REG_ANS e filtrados pelas contas foram salvos em: {arquivo_excel}")
     con.close()
 
 if __name__ == "__main__":
-    extrair_contabilidade()
+    processar_contabilidade()
