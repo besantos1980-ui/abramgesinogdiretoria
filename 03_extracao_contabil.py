@@ -85,29 +85,24 @@ def processar_contabilidade():
     """
     con.execute(query_importacao)
 
-    # 2. Aplica a Regra de Negócio: Filtro por Operadora (REG_ANS) e agrupamento das contas exatas
-    # A cláusula NOT LIKE '%00' evita a soma das contas "mães" (nível sintético) do plano de contas
+   # 2. Aplica a Regra de Negócio com IGUALDADE EXATA.
+    # O comando IN () garante que apenas as contas listadas sejam somadas,
+    # ignorando qualquer subconta (como 3111, 3112, etc).
     query_financas = """
     WITH CalculoContas AS (
         SELECT 
             DATA,
             REG_ANS,
             
-            -- Contraprestações Efetivas (311, 312, 313, 32)
+            -- Contraprestações Efetivas: EXATAMENTE 311, 312, 313, 32
             SUM(CASE 
-                WHEN (CD_CONTA_CONTABIL LIKE '311%' 
-                   OR CD_CONTA_CONTABIL LIKE '312%' 
-                   OR CD_CONTA_CONTABIL LIKE '313%' 
-                   OR CD_CONTA_CONTABIL LIKE '32%')
-                   AND CD_CONTA_CONTABIL NOT LIKE '%00' 
+                WHEN CD_CONTA_CONTABIL IN ('311', '312', '313', '32') 
                 THEN SALDO_TRIMESTRE ELSE 0 
             END) AS Contraprestacoes_Efetivas,
             
-            -- Eventos Indenizáveis Líquidos (411, 412)
+            -- Eventos Indenizáveis: EXATAMENTE 411, 412
             SUM(CASE 
-                WHEN (CD_CONTA_CONTABIL LIKE '411%' 
-                   OR CD_CONTA_CONTABIL LIKE '412%')
-                   AND CD_CONTA_CONTABIL NOT LIKE '%00' 
+                WHEN CD_CONTA_CONTABIL IN ('411', '412') 
                 THEN SALDO_TRIMESTRE ELSE 0 
             END) AS Eventos_Indenizaveis
             
