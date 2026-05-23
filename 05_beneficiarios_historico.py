@@ -56,7 +56,7 @@ def atualizar_historico_beneficiarios():
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
     # ----------------------------------------------------------------------
-    # 4. LIMPEZA E BLINDAGEM (CORREÇÃO DE DATAS SERIAIS DO EXCEL)
+    # 4. LIMPEZA E BLINDAGEM (DATAS E NÚMEROS DO EXCEL)
     # ----------------------------------------------------------------------
     def corrigir_data(valor):
         v = str(valor).strip()
@@ -77,13 +77,19 @@ def atualizar_historico_beneficiarios():
     # Aplica a função inteligente que conserta as datas
     df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(corrigir_data)
     
-    # Padroniza as outras categorias
+    # NOVO: Força os beneficiários a serem números inteiros (limpa textos ou células vazias do Excel)
+    if 'Beneficiarios_Ativos' in df_completo.columns:
+        df_completo['Beneficiarios_Ativos'] = pd.to_numeric(df_completo['Beneficiarios_Ativos'], errors='coerce').fillna(0).astype(int)
+    
+    # Padroniza as outras categorias como texto puro para evitar erros de leitura
     df_completo['Visao'] = df_completo['Visao'].astype(str)
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
-    # Remove duplicatas e organiza
+    # Remove duplicatas (mantendo a extração mais recente caso rode duas vezes no mesmo mês)
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
+    
+    # Organiza em ordem cronológica
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
     # 5. Salvar o arquivo mestre do robô
