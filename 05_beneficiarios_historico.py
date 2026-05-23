@@ -10,7 +10,7 @@ def atualizar_historico_beneficiarios():
     mes_atual = datetime.now().strftime('%Y-%m')
     print(f"Capturando retrato do banco de dados para a referência: {mes_atual}")
     
-    # 1. Tirar a "foto" atual do banco de dados (agora com a coluna correta total_vidas)
+    # 1. Tirar a "foto" atual do banco de dados
     query_atual = f"""
     SELECT 
         '{mes_atual}' AS DATA_REF,
@@ -56,20 +56,34 @@ def atualizar_historico_beneficiarios():
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
     # ----------------------------------------------------------------------
-    # 4. LIMPEZA E BLINDAGEM CONTRA O EXCEL (AQUI ESTÁ A CORREÇÃO)
+    # 4. LIMPEZA E BLINDAGEM (CORREÇÃO DE DATAS SERIAIS DO EXCEL)
     # ----------------------------------------------------------------------
-    # Força a coluna a virar texto e pega só os primeiros 7 caracteres (ex: 2025-12)
-    df_completo['DATA_REF'] = df_completo['DATA_REF'].astype(str).str.slice(0, 7)
+    def corrigir_data(valor):
+        v = str(valor).strip()
+        # Remove '.0' caso o pandas tenha lido a coluna do Excel como decimal
+        if v.endswith('.0'):
+            v = v[:-2]
+            
+        # Se for um número serial do Excel (ex: 45717)
+        if v.isdigit() and len(v) >= 4:
+            # Converte a data serial (base 30/12/1899) para YYYY-MM
+            return pd.to_datetime(int(v), unit='D', origin='1899-12-30').strftime('%Y-%m')
+        # Se for um formato com data e hora (ex: 2025-03-01 00:00:00)
+        elif len(v) >= 7 and '-' in v:
+            return v[:7]
+            
+        return v[:7]
+
+    # Aplica a função inteligente que conserta as datas
+    df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(corrigir_data)
     
-    # Força as colunas de categorias a serem texto puro (evita erros com valores vazios/NaN)
+    # Padroniza as outras categorias
     df_completo['Visao'] = df_completo['Visao'].astype(str)
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
-    # Remove duplicatas
+    # Remove duplicatas e organiza
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
-    
-    # Agora que tudo é texto puro (str), o sort_values não vai mais dar erro matemático
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
     # 5. Salvar o arquivo mestre do robô
