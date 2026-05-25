@@ -7,11 +7,9 @@ def atualizar_historico_beneficiarios():
     print("Iniciando o Passo 05: Consolidando Histórico de Beneficiários...")
     con = duckdb.connect('banco_ans.db')
     
-    # O DuckDB devolve o mês atual (ex: '2026-05')
     mes_atual = datetime.now().strftime('%Y-%m')
     print(f"Capturando retrato do banco de dados para a referência: {mes_atual}")
     
-    # 1. Tirar a "foto" atual do banco de dados
     query_atual = f"""
     SELECT 
         '{mes_atual}' AS DATA_REF,
@@ -40,14 +38,12 @@ def atualizar_historico_beneficiarios():
     
     df_completo = df_atual.copy()
     
-    # 2. Ler a planilha do passado
     arquivo_passado = 'historico_beneficiarios_base.xlsx'
     if os.path.exists(arquivo_passado):
         print(f"Lendo carga histórica inicial de: {arquivo_passado}")
         df_passado = pd.read_excel(arquivo_passado)
         df_completo = pd.concat([df_passado, df_completo], ignore_index=True)
         
-    # 3. Ler o histórico acumulado
     arquivo_robo = 'historico_acumulado_rob.csv'
     if os.path.exists(arquivo_robo):
         print(f"Lendo histórico acumulado do robô de: {arquivo_robo}")
@@ -55,63 +51,60 @@ def atualizar_historico_beneficiarios():
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
     # ----------------------------------------------------------------------
-    # 4. LIMPEZA E BLINDAGEM (CONVERSÃO DEFINITIVA PARA TRIMESTRE)
+    # 4. LIMPEZA BLINDADA (DATAS, ESPAÇOS E NÚMEROS)
     # ----------------------------------------------------------------------
+    
+    # Arranca qualquer espaço em branco invisível do nome das colunas
+    df_completo.rename(columns=lambda x: str(x).strip(), inplace=True)
+    
     def converter_para_trimestre(valor):
         v = str(valor).strip()
-        
-        # Se for um formato que já tem 'T' (ex: 1T2025), devolve intacto
-        if 'T' in v:
-            return v
-            
-        # Se vier com '.0'
-        if v.endswith('.0'):
-            v = v[:-2]
+        if 'T' in v: return v
+        if v.endswith('.0'): v = v[:-2]
             
         dt = None
-        # Tenta converter se for número serial do Excel
         if v.isdigit() and len(v) >= 4:
-            try:
-                dt = pd.to_datetime(int(v), unit='D', origin='1899-12-30')
-            except:
-                pass
-        # Tenta converter se for string (ex: '2025-03', '2025-03-01 00:00:00')
+            try: dt = pd.to_datetime(int(v), unit='D', origin='1899-12-30')
+            except: pass
         else:
-            try:
-                # O parâmetro exact=False tenta encontrar o padrão
-                dt = pd.to_datetime(v[:10], errors='coerce') 
-            except:
-                pass
+            try: dt = pd.to_datetime(v[:10], errors='coerce') 
+            except: pass
                 
-        # Se conseguiu transformar numa data real
         if dt is not None and not pd.isna(dt):
             trimestre = (dt.month - 1) // 3 + 1
-            ano = dt.year
-            return f"{trimestre}T{ano}"
-            
-        return v # Retorno seguro (fallback)
+            return f"{trimestre}T{dt.year}"
+        return v
 
-    # Aplica a função de conversão para o formato 1T2025
     df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(converter_para_trimestre)
     
-    # Força os beneficiários a serem números inteiros limpos
+    # Função extrema para limpar sujeira nos números (remove pontos, letras e vírgulas)
+    def limpar_beneficiarios(valor):
+        if pd.isna(valor): return 0
+        if isinstance(valor, (int, float)): return int(valor)
+        
+        v = str(valor).strip()
+        if v.endswith('.0'): v = v[:-2]
+        
+        # Mantém apenas o que for dígito puro (ex: "1.500" vira "1500")
+        v_limpo = ''.join(filter(str.isdigit, v))
+        return int(v_limpo) if v_limpo else 0
+
+    # Aplica a limpeza bruta se a coluna existir
     if 'Beneficiarios_Ativos' in df_completo.columns:
-        df_completo['Beneficiarios_Ativos'] = pd.to_numeric(df_completo['Beneficiarios_Ativos'], errors='coerce').fillna(0).astype(int)
+        df_completo['Beneficiarios_Ativos'] = df_completo['Beneficiarios_Ativos'].apply(limpar_beneficiarios)
+    else:
+        print("ALERTA CRÍTICO: A coluna 'Beneficiarios_Ativos' não foi encontrada. Verifique o Excel.")
     
-    # Padroniza as outras categorias
     df_completo['Visao'] = df_completo['Visao'].astype(str)
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
-    # Remove duplicatas baseadas no novo formato Trimestral
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
-    # 5. Salvar o arquivo mestre do robô
     df_completo.to_csv(arquivo_robo, sep=';', index=False)
     print(f"[OK] Arquivo mestre atualizado com sucesso: {arquivo_robo}")
     
-    # 6. Gerar o JSON para o React
     arquivo_json = 'beneficiarios.json'
     df_completo.to_json(arquivo_json, orient='records', date_format='iso')
     print(f"[OK] Arquivo exportado para o dashboard: {arquivo_json}")
