@@ -1,22 +1,22 @@
-import duckdb
 import pandas as pd
 import os
+import duckdb
 
-# =====================================================================
-# CONFIGURAÇÃO MANUAL DE COMPETÊNCIA
-# Informe abaixo qual é o mês real dos dados que estão no banco_ans.db
-# (Ex: '2026-03' ou '2026-04'). Isso evita a criação de meses fantasmas.
-# =====================================================================
 MES_REFERENCIA_BANCO = '2026-03' 
 
 def normalizar_colunas(df):
-    # Arranca espaços invisíveis
     df.rename(columns=lambda x: str(x).strip(), inplace=True)
-    # Padroniza a coluna de vidas
-    colunas_corrigidas = {col: 'Beneficiarios_Ativos' for col in df.columns if str(col).lower() == 'beneficiarios_ativos'}
+    
+    # SUPER VACINA: Ignora espaços, underlines e maiúsculas na hora de procurar a coluna
+    colunas_corrigidas = {}
+    for col in df.columns:
+        nome_normalizado = str(col).lower().replace(' ', '_')
+        if nome_normalizado == 'beneficiarios_ativos':
+            colunas_corrigidas[col] = 'Beneficiarios_Ativos'
+            
     df.rename(columns=colunas_corrigidas, inplace=True)
     
-    # VACINA DE DADOS: Traduz a nomenclatura do Excel para o padrão do Painel
+    # Traduz as visões do Excel para o padrão do Painel
     if 'Visao' in df.columns:
         df['Visao'] = df['Visao'].replace({
             'ASSISTÊNCIA MÉDICA': 'Médico-Hospitalar',
@@ -59,11 +59,16 @@ def atualizar_historico_beneficiarios():
     df_atual = normalizar_colunas(df_atual)
     df_completo = df_atual.copy()
     
+    # Volta a ler estritamente o seu arquivo Excel local
     arquivo_passado = 'historico_beneficiarios_base.xlsx'
+    
     if os.path.exists(arquivo_passado):
+        print(f"[Sucesso] Lendo arquivo de histórico: {arquivo_passado}")
         df_passado = pd.read_excel(arquivo_passado)
         df_passado = normalizar_colunas(df_passado) 
         df_completo = pd.concat([df_passado, df_completo], ignore_index=True)
+    else:
+        print(f"ALERTA: O arquivo {arquivo_passado} não foi encontrado na pasta!")
         
     arquivo_robo = 'historico_acumulado_rob.csv'
     if os.path.exists(arquivo_robo):
@@ -111,14 +116,13 @@ def atualizar_historico_beneficiarios():
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
-    # O deduplicador agora vai funcionar perfeitamente, pois os nomes das visões estão idênticos!
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
     df_completo.to_csv(arquivo_robo, sep=';', index=False)
     arquivo_json = 'beneficiarios.json'
     df_completo.to_json(arquivo_json, orient='records', date_format='iso')
-    print(f"[OK] Arquivo exportado com sucesso: {arquivo_json}")
+    print(f"[OK] Arquivo com histórico completo gerado: {arquivo_json}")
 
 if __name__ == "__main__":
     atualizar_historico_beneficiarios()
