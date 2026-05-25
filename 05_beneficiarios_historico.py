@@ -4,17 +4,18 @@ import os
 from datetime import datetime
 
 def normalizar_colunas(df):
-    # Arranca espaços em branco invisíveis das pontas
+    # Remove espaços em branco invisíveis das pontas dos cabeçalhos
     df.rename(columns=lambda x: str(x).strip(), inplace=True)
-    # Força o nome da coluna de vidas para o padrão exato, ignorando maiúsculas/minúsculas
+    # Força o nome da coluna de vidas para o padrão exato do projeto
     colunas_corrigidas = {col: 'Beneficiarios_Ativos' for col in df.columns if str(col).lower() == 'beneficiarios_ativos'}
     df.rename(columns=colunas_corrigidas, inplace=True)
     return df
 
 def atualizar_historico_beneficiarios():
-    print("Iniciando o Passo 05: Consolidando Histórico de Beneficiários...")
+    print("Iniciando o Passo 05: Consolidando Histórico de Beneficiários (Mensal)...")
     con = duckdb.connect('banco_ans.db')
     
+    # Captura a referência do mês atual no formato YYYY-MM
     mes_atual = datetime.now().strftime('%Y-%m')
     
     query_atual = f"""
@@ -43,46 +44,47 @@ def atualizar_historico_beneficiarios():
 
     con.close()
     
-    # 1. Normaliza a foto atual antes de juntar
     df_atual = normalizar_colunas(df_atual)
     df_completo = df_atual.copy()
     
     arquivo_passado = 'historico_beneficiarios_base.xlsx'
     if os.path.exists(arquivo_passado):
         df_passado = pd.read_excel(arquivo_passado)
-        # 2. Normaliza o passado ANTES de juntar
         df_passado = normalizar_colunas(df_passado) 
         df_completo = pd.concat([df_passado, df_completo], ignore_index=True)
         
     arquivo_robo = 'historico_acumulado_rob.csv'
     if os.path.exists(arquivo_robo):
         df_acumulado = pd.read_csv(arquivo_robo, sep=';')
-        # 3. Normaliza o histórico do robô ANTES de juntar
         df_acumulado = normalizar_colunas(df_acumulado) 
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
     # ----------------------------------------------------------------------
-    # 4. LIMPEZA BLINDADA (DATAS E NÚMEROS)
+    # 4. LIMPEZA BLINDADA (PADRONIZAÇÃO MENSAL YYYY-MM)
     # ----------------------------------------------------------------------
-    def converter_para_trimestre(valor):
+    def converter_para_mes(valor):
         v = str(valor).strip()
-        if 'T' in v: return v
         if v.endswith('.0'): v = v[:-2]
             
         dt = None
+        # Trata número serial do Excel
         if v.isdigit() and len(v) >= 4:
             try: dt = pd.to_datetime(int(v), unit='D', origin='1899-12-30')
             except: pass
+        # Trata formatos de data normais
         else:
             try: dt = pd.to_datetime(v[:10], errors='coerce') 
             except: pass
                 
         if dt is not None and not pd.isna(dt):
-            trimestre = (dt.month - 1) // 3 + 1
-            return f"{trimestre}T{dt.year}"
+            return dt.strftime('%Y-%m')
+        
+        # Fallback caso já esteja formatado como YYYY-MM seguro
+        if len(v) >= 7 and v[4] == '-':
+            return v[:7]
         return v
 
-    df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(converter_para_trimestre)
+    df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(converter_para_mes)
     
     def limpar_beneficiarios(valor):
         if pd.isna(valor): return 0
@@ -92,30 +94,25 @@ def atualizar_historico_beneficiarios():
         v_limpo = ''.join(filter(str.isdigit, v))
         return int(v_limpo) if v_limpo else 0
 
-    # Aplica a limpeza resolvendo colunas duplicadas (caso existam)
     if 'Beneficiarios_Ativos' in df_completo.columns:
-        # Trava de segurança: se o Pandas criou um DataFrame por duplicidade de colunas
         if isinstance(df_completo['Beneficiarios_Ativos'], pd.DataFrame):
-            # Funde as colunas duplicadas numa só
             df_completo['Beneficiarios_Ativos'] = df_completo['Beneficiarios_Ativos'].bfill(axis=1).iloc[:, 0]
-            # Remove a coluna espelho
             df_completo = df_completo.loc[:, ~df_completo.columns.duplicated()]
             
         df_completo['Beneficiarios_Ativos'] = df_completo['Beneficiarios_Ativos'].apply(limpar_beneficiarios)
-    else:
-        print("ALERTA CRÍTICO: A coluna de beneficiários não foi encontrada.")
     
     df_completo['Visao'] = df_completo['Visao'].astype(str)
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
+    # Consolida removendo duplicatas no nível do mês (DATA_REF)
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
     df_completo.to_csv(arquivo_robo, sep=';', index=False)
     arquivo_json = 'beneficiarios.json'
     df_completo.to_json(arquivo_json, orient='records', date_format='iso')
-    print(f"[OK] Arquivo exportado para o dashboard: {arquivo_json}")
+    print(f"[OK] Arquivo mensal exportado com sucesso: {arquivo_json}")
 
 if __name__ == "__main__":
     atualizar_historico_beneficiarios()
