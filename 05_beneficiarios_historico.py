@@ -7,6 +7,7 @@ def atualizar_historico_beneficiarios():
     print("Iniciando o Passo 05: Consolidando Histórico de Beneficiários...")
     con = duckdb.connect('banco_ans.db')
     
+    # O DuckDB devolve o mês atual (ex: '2026-05')
     mes_atual = datetime.now().strftime('%Y-%m')
     print(f"Capturando retrato do banco de dados para a referência: {mes_atual}")
     
@@ -21,9 +22,7 @@ def atualizar_historico_beneficiarios():
         END AS Visao,
         cd.Modalidade,
         COALESCE(p.Porte, 'Sem Informação') AS Porte,
-        
         SUM(p.total_vidas) AS Beneficiarios_Ativos
-        
     FROM porte_operadoras p
     INNER JOIN cadop cd ON p.REG_ANS = cd.REG_ANS
     GROUP BY Visao, cd.Modalidade, Porte
@@ -56,40 +55,56 @@ def atualizar_historico_beneficiarios():
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
     # ----------------------------------------------------------------------
-    # 4. LIMPEZA E BLINDAGEM (DATAS E NÚMEROS DO EXCEL)
+    # 4. LIMPEZA E BLINDAGEM (CONVERSÃO DEFINITIVA PARA TRIMESTRE)
     # ----------------------------------------------------------------------
-    def corrigir_data(valor):
+    def converter_para_trimestre(valor):
         v = str(valor).strip()
-        # Remove '.0' caso o pandas tenha lido a coluna do Excel como decimal
+        
+        # Se for um formato que já tem 'T' (ex: 1T2025), devolve intacto
+        if 'T' in v:
+            return v
+            
+        # Se vier com '.0'
         if v.endswith('.0'):
             v = v[:-2]
             
-        # Se for um número serial do Excel (ex: 45717)
+        dt = None
+        # Tenta converter se for número serial do Excel
         if v.isdigit() and len(v) >= 4:
-            # Converte a data serial (base 30/12/1899) para YYYY-MM
-            return pd.to_datetime(int(v), unit='D', origin='1899-12-30').strftime('%Y-%m')
-        # Se for um formato com data e hora (ex: 2025-03-01 00:00:00)
-        elif len(v) >= 7 and '-' in v:
-            return v[:7]
+            try:
+                dt = pd.to_datetime(int(v), unit='D', origin='1899-12-30')
+            except:
+                pass
+        # Tenta converter se for string (ex: '2025-03', '2025-03-01 00:00:00')
+        else:
+            try:
+                # O parâmetro exact=False tenta encontrar o padrão
+                dt = pd.to_datetime(v[:10], errors='coerce') 
+            except:
+                pass
+                
+        # Se conseguiu transformar numa data real
+        if dt is not None and not pd.isna(dt):
+            trimestre = (dt.month - 1) // 3 + 1
+            ano = dt.year
+            return f"{trimestre}T{ano}"
             
-        return v[:7]
+        return v # Retorno seguro (fallback)
 
-    # Aplica a função inteligente que conserta as datas
-    df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(corrigir_data)
+    # Aplica a função de conversão para o formato 1T2025
+    df_completo['DATA_REF'] = df_completo['DATA_REF'].apply(converter_para_trimestre)
     
-    # NOVO: Força os beneficiários a serem números inteiros (limpa textos ou células vazias do Excel)
+    # Força os beneficiários a serem números inteiros limpos
     if 'Beneficiarios_Ativos' in df_completo.columns:
         df_completo['Beneficiarios_Ativos'] = pd.to_numeric(df_completo['Beneficiarios_Ativos'], errors='coerce').fillna(0).astype(int)
     
-    # Padroniza as outras categorias como texto puro para evitar erros de leitura
+    # Padroniza as outras categorias
     df_completo['Visao'] = df_completo['Visao'].astype(str)
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
-    # Remove duplicatas (mantendo a extração mais recente caso rode duas vezes no mesmo mês)
+    # Remove duplicatas baseadas no novo formato Trimestral
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
-    
-    # Organiza em ordem cronológica
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
     # 5. Salvar o arquivo mestre do robô
