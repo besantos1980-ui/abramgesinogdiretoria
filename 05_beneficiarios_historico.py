@@ -3,6 +3,14 @@ import pandas as pd
 import os
 from datetime import datetime
 
+def normalizar_colunas(df):
+    # Arranca espaços em branco invisíveis das pontas
+    df.rename(columns=lambda x: str(x).strip(), inplace=True)
+    # Força o nome da coluna de vidas para o padrão exato, ignorando maiúsculas/minúsculas
+    colunas_corrigidas = {col: 'Beneficiarios_Ativos' for col in df.columns if str(col).lower() == 'beneficiarios_ativos'}
+    df.rename(columns=colunas_corrigidas, inplace=True)
+    return df
+
 def atualizar_historico_beneficiarios():
     print("Iniciando o Passo 05: Consolidando Histórico de Beneficiários...")
     con = duckdb.connect('banco_ans.db')
@@ -34,29 +42,28 @@ def atualizar_historico_beneficiarios():
         return
 
     con.close()
+    
+    # 1. Normaliza a foto atual antes de juntar
+    df_atual = normalizar_colunas(df_atual)
     df_completo = df_atual.copy()
     
     arquivo_passado = 'historico_beneficiarios_base.xlsx'
     if os.path.exists(arquivo_passado):
         df_passado = pd.read_excel(arquivo_passado)
+        # 2. Normaliza o passado ANTES de juntar
+        df_passado = normalizar_colunas(df_passado) 
         df_completo = pd.concat([df_passado, df_completo], ignore_index=True)
         
     arquivo_robo = 'historico_acumulado_rob.csv'
     if os.path.exists(arquivo_robo):
         df_acumulado = pd.read_csv(arquivo_robo, sep=';')
+        # 3. Normaliza o histórico do robô ANTES de juntar
+        df_acumulado = normalizar_colunas(df_acumulado) 
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
     # ----------------------------------------------------------------------
-    # 4. LIMPEZA BLINDADA (ESPAÇOS, MAIÚSCULAS/MINÚSCULAS E NÚMEROS)
+    # 4. LIMPEZA BLINDADA (DATAS E NÚMEROS)
     # ----------------------------------------------------------------------
-    
-    # 1. Arranca qualquer espaço em branco invisível
-    df_completo.rename(columns=lambda x: str(x).strip(), inplace=True)
-    
-    # 2. FORÇA BRUTA: Padroniza o nome da coluna independentemente de como veio do Excel
-    colunas_corrigidas = {col: 'Beneficiarios_Ativos' for col in df_completo.columns if str(col).lower() == 'beneficiarios_ativos'}
-    df_completo.rename(columns=colunas_corrigidas, inplace=True)
-    
     def converter_para_trimestre(valor):
         v = str(valor).strip()
         if 'T' in v: return v
@@ -85,7 +92,15 @@ def atualizar_historico_beneficiarios():
         v_limpo = ''.join(filter(str.isdigit, v))
         return int(v_limpo) if v_limpo else 0
 
+    # Aplica a limpeza resolvendo colunas duplicadas (caso existam)
     if 'Beneficiarios_Ativos' in df_completo.columns:
+        # Trava de segurança: se o Pandas criou um DataFrame por duplicidade de colunas
+        if isinstance(df_completo['Beneficiarios_Ativos'], pd.DataFrame):
+            # Funde as colunas duplicadas numa só
+            df_completo['Beneficiarios_Ativos'] = df_completo['Beneficiarios_Ativos'].bfill(axis=1).iloc[:, 0]
+            # Remove a coluna espelho
+            df_completo = df_completo.loc[:, ~df_completo.columns.duplicated()]
+            
         df_completo['Beneficiarios_Ativos'] = df_completo['Beneficiarios_Ativos'].apply(limpar_beneficiarios)
     else:
         print("ALERTA CRÍTICO: A coluna de beneficiários não foi encontrada.")
