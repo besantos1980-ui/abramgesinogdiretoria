@@ -1,26 +1,38 @@
 import duckdb
 import pandas as pd
 import os
-from datetime import datetime
+
+# =====================================================================
+# CONFIGURAÇÃO MANUAL DE COMPETÊNCIA
+# Informe abaixo qual é o mês real dos dados que estão no banco_ans.db
+# (Ex: '2026-03' ou '2026-04'). Isso evita a criação de meses fantasmas.
+# =====================================================================
+MES_REFERENCIA_BANCO = '2026-03' 
 
 def normalizar_colunas(df):
-    # Remove espaços em branco invisíveis das pontas dos cabeçalhos
+    # Arranca espaços invisíveis
     df.rename(columns=lambda x: str(x).strip(), inplace=True)
-    # Força o nome da coluna de vidas para o padrão exato do projeto
+    # Padroniza a coluna de vidas
     colunas_corrigidas = {col: 'Beneficiarios_Ativos' for col in df.columns if str(col).lower() == 'beneficiarios_ativos'}
     df.rename(columns=colunas_corrigidas, inplace=True)
+    
+    # VACINA DE DADOS: Traduz a nomenclatura do Excel para o padrão do Painel
+    if 'Visao' in df.columns:
+        df['Visao'] = df['Visao'].replace({
+            'ASSISTÊNCIA MÉDICA': 'Médico-Hospitalar',
+            'ASSISTENCIA MEDICA': 'Médico-Hospitalar',
+            'EXCLUSIVAMENTE ODONTOLÓGICA': 'Exclusivamente Odontológico',
+            'EXCLUSIVAMENTE ODONTOLOGICA': 'Exclusivamente Odontológico'
+        })
     return df
 
 def atualizar_historico_beneficiarios():
-    print("Iniciando o Passo 05: Consolidando Histórico de Beneficiários (Mensal)...")
+    print(f"Iniciando Passo 05. Lendo banco de dados com referência: {MES_REFERENCIA_BANCO}...")
     con = duckdb.connect('banco_ans.db')
-    
-    # Captura a referência do mês atual no formato YYYY-MM
-    mes_atual = datetime.now().strftime('%Y-%m')
     
     query_atual = f"""
     SELECT 
-        '{mes_atual}' AS DATA_REF,
+        '{MES_REFERENCIA_BANCO}' AS DATA_REF,
         CASE 
             WHEN cd.Modalidade IN ('Autogestão', 'Cooperativa Médica', 'Filantropia', 'Medicina de Grupo', 'Seguradora Especializada em Saúde') THEN 'Médico-Hospitalar'
             WHEN cd.Modalidade IN ('Cooperativa Odontológica', 'Odontologia de Grupo') THEN 'Exclusivamente Odontológico'
@@ -59,19 +71,14 @@ def atualizar_historico_beneficiarios():
         df_acumulado = normalizar_colunas(df_acumulado) 
         df_completo = pd.concat([df_acumulado, df_completo], ignore_index=True)
         
-    # ----------------------------------------------------------------------
-    # 4. LIMPEZA BLINDADA (PADRONIZAÇÃO MENSAL YYYY-MM)
-    # ----------------------------------------------------------------------
     def converter_para_mes(valor):
         v = str(valor).strip()
         if v.endswith('.0'): v = v[:-2]
             
         dt = None
-        # Trata número serial do Excel
         if v.isdigit() and len(v) >= 4:
             try: dt = pd.to_datetime(int(v), unit='D', origin='1899-12-30')
             except: pass
-        # Trata formatos de data normais
         else:
             try: dt = pd.to_datetime(v[:10], errors='coerce') 
             except: pass
@@ -79,7 +86,6 @@ def atualizar_historico_beneficiarios():
         if dt is not None and not pd.isna(dt):
             return dt.strftime('%Y-%m')
         
-        # Fallback caso já esteja formatado como YYYY-MM seguro
         if len(v) >= 7 and v[4] == '-':
             return v[:7]
         return v
@@ -105,14 +111,14 @@ def atualizar_historico_beneficiarios():
     df_completo['Modalidade'] = df_completo['Modalidade'].astype(str)
     df_completo['Porte'] = df_completo['Porte'].astype(str)
     
-    # Consolida removendo duplicatas no nível do mês (DATA_REF)
+    # O deduplicador agora vai funcionar perfeitamente, pois os nomes das visões estão idênticos!
     df_completo = df_completo.drop_duplicates(subset=['DATA_REF', 'Visao', 'Modalidade', 'Porte'], keep='last')
     df_completo = df_completo.sort_values(by=['DATA_REF', 'Visao', 'Modalidade', 'Porte'])
     
     df_completo.to_csv(arquivo_robo, sep=';', index=False)
     arquivo_json = 'beneficiarios.json'
     df_completo.to_json(arquivo_json, orient='records', date_format='iso')
-    print(f"[OK] Arquivo mensal exportado com sucesso: {arquivo_json}")
+    print(f"[OK] Arquivo exportado com sucesso: {arquivo_json}")
 
 if __name__ == "__main__":
     atualizar_historico_beneficiarios()
