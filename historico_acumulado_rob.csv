@@ -1,0 +1,270 @@
+DATA_REF;Visao;Modalidade;Porte;Beneficiarios_Ativos
+2025-03;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2767046
+2025-03;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1271953
+2025-03;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;424033
+2025-03;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13905102
+2025-03;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;848378
+2025-03;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;494871
+2025-03;Médico-Hospitalar;AUTOGESTÃO;Grande;3009366
+2025-03;Médico-Hospitalar;AUTOGESTÃO;Médio;978535
+2025-03;Médico-Hospitalar;AUTOGESTÃO;Pequeno;583256
+2025-03;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12733084
+2025-03;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;5104157
+2025-03;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1027683
+2025-03;Médico-Hospitalar;FILANTROPIA;Grande;376015
+2025-03;Médico-Hospitalar;FILANTROPIA;Médio;529902
+2025-03;Médico-Hospitalar;FILANTROPIA;Pequeno;174980
+2025-03;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16704551
+2025-03;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3071240
+2025-03;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;928144
+2025-03;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;6801221
+2025-03;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;33640
+2025-03;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7534
+2025-04;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2772007
+2025-04;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1278161
+2025-04;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;424140
+2025-04;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13887774
+2025-04;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;846091
+2025-04;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;497566
+2025-04;Médico-Hospitalar;AUTOGESTÃO;Grande;3004900
+2025-04;Médico-Hospitalar;AUTOGESTÃO;Médio;979021
+2025-04;Médico-Hospitalar;AUTOGESTÃO;Pequeno;582071
+2025-04;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12920539
+2025-04;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4904716
+2025-04;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1030654
+2025-04;Médico-Hospitalar;FILANTROPIA;Grande;372957
+2025-04;Médico-Hospitalar;FILANTROPIA;Médio;529472
+2025-04;Médico-Hospitalar;FILANTROPIA;Pequeno;176161
+2025-04;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16739827
+2025-04;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3068030
+2025-04;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;945390
+2025-04;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;6833593
+2025-04;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;31438
+2025-04;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7493
+2025-05;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2793013
+2025-05;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1283470
+2025-05;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;425200
+2025-05;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13615794
+2025-05;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;844566
+2025-05;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;492129
+2025-05;Médico-Hospitalar;AUTOGESTÃO;Grande;3006236
+2025-05;Médico-Hospitalar;AUTOGESTÃO;Médio;977929
+2025-05;Médico-Hospitalar;AUTOGESTÃO;Pequeno;580653
+2025-05;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12916844
+2025-05;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4928904
+2025-05;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1011813
+2025-05;Médico-Hospitalar;FILANTROPIA;Grande;371522
+2025-05;Médico-Hospitalar;FILANTROPIA;Médio;532410
+2025-05;Médico-Hospitalar;FILANTROPIA;Pequeno;177042
+2025-05;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16838527
+2025-05;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3089355
+2025-05;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;951393
+2025-05;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;6892701
+2025-05;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;30939
+2025-05;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7460
+2025-06;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2819216
+2025-06;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1289856
+2025-06;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;424562
+2025-06;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13029618
+2025-06;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;842965
+2025-06;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;492854
+2025-06;Médico-Hospitalar;AUTOGESTÃO;Grande;3006896
+2025-06;Médico-Hospitalar;AUTOGESTÃO;Médio;975592
+2025-06;Médico-Hospitalar;AUTOGESTÃO;Pequeno;577619
+2025-06;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12899773
+2025-06;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4942370
+2025-06;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1013512
+2025-06;Médico-Hospitalar;FILANTROPIA;Grande;369596
+2025-06;Médico-Hospitalar;FILANTROPIA;Médio;535901
+2025-06;Médico-Hospitalar;FILANTROPIA;Pequeno;177118
+2025-06;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16812346
+2025-06;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3203316
+2025-06;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;911543
+2025-06;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;6925044
+2025-06;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;30389
+2025-06;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7430
+2025-07;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2767046
+2025-07;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1271953
+2025-07;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;424033
+2025-07;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13905102
+2025-07;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;848378
+2025-07;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;494871
+2025-07;Médico-Hospitalar;AUTOGESTÃO;Grande;3009366
+2025-07;Médico-Hospitalar;AUTOGESTÃO;Médio;978535
+2025-07;Médico-Hospitalar;AUTOGESTÃO;Pequeno;583256
+2025-07;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12733084
+2025-07;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;5104157
+2025-07;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1027683
+2025-07;Médico-Hospitalar;FILANTROPIA;Grande;376015
+2025-07;Médico-Hospitalar;FILANTROPIA;Médio;529902
+2025-07;Médico-Hospitalar;FILANTROPIA;Pequeno;174980
+2025-07;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16704551
+2025-07;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3071240
+2025-07;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;928144
+2025-07;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;6801221
+2025-07;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;33640
+2025-07;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7534
+2025-08;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2868038
+2025-08;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1300319
+2025-08;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;426339
+2025-08;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13296517
+2025-08;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;785881
+2025-08;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;464818
+2025-08;Médico-Hospitalar;AUTOGESTÃO;Grande;3007934
+2025-08;Médico-Hospitalar;AUTOGESTÃO;Médio;968490
+2025-08;Médico-Hospitalar;AUTOGESTÃO;Pequeno;576113
+2025-08;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12932384
+2025-08;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4865521
+2025-08;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1054746
+2025-08;Médico-Hospitalar;FILANTROPIA;Grande;365085
+2025-08;Médico-Hospitalar;FILANTROPIA;Médio;540261
+2025-08;Médico-Hospitalar;FILANTROPIA;Pequeno;178582
+2025-08;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16782365
+2025-08;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3349681
+2025-08;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;904119
+2025-08;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7003306
+2025-08;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2025-08;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7347
+2025-09;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2872213
+2025-09;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1306051
+2025-09;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;419220
+2025-09;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13519895
+2025-09;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;791441
+2025-09;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;468903
+2025-09;Médico-Hospitalar;AUTOGESTÃO;Grande;3005914
+2025-09;Médico-Hospitalar;AUTOGESTÃO;Médio;951527
+2025-09;Médico-Hospitalar;AUTOGESTÃO;Pequeno;595296
+2025-09;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;13057256
+2025-09;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4768701
+2025-09;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1055685
+2025-09;Médico-Hospitalar;FILANTROPIA;Grande;360997
+2025-09;Médico-Hospitalar;FILANTROPIA;Médio;542123
+2025-09;Médico-Hospitalar;FILANTROPIA;Pequeno;177088
+2025-09;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;16920687
+2025-09;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3329054
+2025-09;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;938615
+2025-09;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7071965
+2025-09;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2025-09;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7317
+2025-10;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2903178
+2025-10;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1312257
+2025-10;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;420631
+2025-10;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13511787
+2025-10;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;880424
+2025-10;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;478799
+2025-10;Médico-Hospitalar;AUTOGESTÃO;Grande;2888328
+2025-10;Médico-Hospitalar;AUTOGESTÃO;Médio;1015735
+2025-10;Médico-Hospitalar;AUTOGESTÃO;Pequeno;614066
+2025-10;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;13114187
+2025-10;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4649138
+2025-10;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1073720
+2025-10;Médico-Hospitalar;FILANTROPIA;Grande;358616
+2025-10;Médico-Hospitalar;FILANTROPIA;Médio;543934
+2025-10;Médico-Hospitalar;FILANTROPIA;Pequeno;177817
+2025-10;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;17136713
+2025-10;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3160567
+2025-10;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;958866
+2025-10;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7118868
+2025-10;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2025-10;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7285
+2025-11;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2922882
+2025-11;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1318401
+2025-11;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;420199
+2025-11;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13616834
+2025-11;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;902091
+2025-11;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;459333
+2025-11;Médico-Hospitalar;AUTOGESTÃO;Grande;2888293
+2025-11;Médico-Hospitalar;AUTOGESTÃO;Médio;1024271
+2025-11;Médico-Hospitalar;AUTOGESTÃO;Pequeno;613360
+2025-11;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12984482
+2025-11;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4737327
+2025-11;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1075803
+2025-11;Médico-Hospitalar;FILANTROPIA;Grande;357695
+2025-11;Médico-Hospitalar;FILANTROPIA;Médio;544870
+2025-11;Médico-Hospitalar;FILANTROPIA;Pequeno;178567
+2025-11;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;17205622
+2025-11;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3192609
+2025-11;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;920861
+2025-11;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7217711
+2025-11;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2025-11;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7250
+2025-12;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2932710
+2025-12;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1321173
+2025-12;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;420224
+2025-12;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13602756
+2025-12;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;918195
+2025-12;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;459389
+2025-12;Médico-Hospitalar;AUTOGESTÃO;Grande;2886720
+2025-12;Médico-Hospitalar;AUTOGESTÃO;Médio;1022622
+2025-12;Médico-Hospitalar;AUTOGESTÃO;Pequeno;609449
+2025-12;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12846831
+2025-12;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4824509
+2025-12;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1072126
+2025-12;Médico-Hospitalar;FILANTROPIA;Grande;355670
+2025-12;Médico-Hospitalar;FILANTROPIA;Médio;545038
+2025-12;Médico-Hospitalar;FILANTROPIA;Pequeno;190682
+2025-12;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;17212550
+2025-12;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3224180
+2025-12;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;917515
+2025-12;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7286283
+2025-12;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2025-12;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7233
+2026-01;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2939095
+2026-01;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1314627
+2026-01;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;419159
+2026-01;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13443890
+2026-01;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;912034
+2026-01;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;460025
+2026-01;Médico-Hospitalar;AUTOGESTÃO;Grande;2874695
+2026-01;Médico-Hospitalar;AUTOGESTÃO;Médio;1042236
+2026-01;Médico-Hospitalar;AUTOGESTÃO;Pequeno;586124
+2026-01;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12895881
+2026-01;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4712374
+2026-01;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1068145
+2026-01;Médico-Hospitalar;FILANTROPIA;Grande;353707
+2026-01;Médico-Hospitalar;FILANTROPIA;Médio;544333
+2026-01;Médico-Hospitalar;FILANTROPIA;Pequeno;190352
+2026-01;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;17183162
+2026-01;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3214799
+2026-01;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;911238
+2026-01;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7294697
+2026-01;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2026-01;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7183
+2026-02;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Grande;2937383
+2026-02;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Médio;1314467
+2026-02;Exclusivamente Odontológico;COOPERATIVA ODONTOLÓGICA;Pequeno;416511
+2026-02;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Grande;13598741
+2026-02;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Médio;895107
+2026-02;Exclusivamente Odontológico;ODONTOLOGIA DE GRUPO;Pequeno;461281
+2026-02;Médico-Hospitalar;AUTOGESTÃO;Grande;2870089
+2026-02;Médico-Hospitalar;AUTOGESTÃO;Médio;1061402
+2026-02;Médico-Hospitalar;AUTOGESTÃO;Pequeno;568514
+2026-02;Médico-Hospitalar;COOPERATIVA MÉDICA;Grande;12848693
+2026-02;Médico-Hospitalar;COOPERATIVA MÉDICA;Médio;4706667
+2026-02;Médico-Hospitalar;COOPERATIVA MÉDICA;Pequeno;1065291
+2026-02;Médico-Hospitalar;FILANTROPIA;Grande;345658
+2026-02;Médico-Hospitalar;FILANTROPIA;Médio;545203
+2026-02;Médico-Hospitalar;FILANTROPIA;Pequeno;190391
+2026-02;Médico-Hospitalar;MEDICINA DE GRUPO;Grande;17299267
+2026-02;Médico-Hospitalar;MEDICINA DE GRUPO;Médio;3118487
+2026-02;Médico-Hospitalar;MEDICINA DE GRUPO;Pequeno;905208
+2026-02;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Grande;7358463
+2026-02;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Médio;0
+2026-02;Médico-Hospitalar;SEGURADORA ESPECIALIZADA EM SAÚDE;Pequeno;7169
+2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Grande;13671286
+2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Médio;895383
+2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Pequeno;463560
+2026-03;Médico-Hospitalar;Autogestão;Grande;2860273
+2026-03;Médico-Hospitalar;Autogestão;Médio;1164322
+2026-03;Médico-Hospitalar;Autogestão;Pequeno;559332
+2026-03;Médico-Hospitalar;Cooperativa Médica;Grande;13494286
+2026-03;Médico-Hospitalar;Cooperativa Médica;Médio;4606148
+2026-03;Médico-Hospitalar;Cooperativa Médica;Pequeno;1061385
+2026-03;Médico-Hospitalar;Filantropia;Grande;436552
+2026-03;Médico-Hospitalar;Filantropia;Médio;610583
+2026-03;Médico-Hospitalar;Filantropia;Pequeno;153545
+2026-03;Médico-Hospitalar;Medicina de Grupo;Grande;29176931
+2026-03;Médico-Hospitalar;Medicina de Grupo;Médio;2948651
+2026-03;Médico-Hospitalar;Medicina de Grupo;Pequeno;927188
+2026-03;Médico-Hospitalar;Seguradora Especializada em Saúde;Grande;11001544
+2026-03;Médico-Hospitalar;Seguradora Especializada em Saúde;Pequeno;7120
