@@ -254,9 +254,9 @@ DATA_REF;Visao;Modalidade;Porte;Beneficiarios_Ativos;MODALIDADE
 2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Grande;4845899;
 2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Médio;1070005;
 2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Pequeno;430251;
-2026-03;Exclusivamente Odontológico;nan;Grande;4845899;Odontologia de Grupo
-2026-03;Exclusivamente Odontológico;nan;Médio;1070005;Odontologia de Grupo
-2026-03;Exclusivamente Odontológico;nan;Pequeno;430251;Odontologia de Grupo
+2026-03;Exclusivamente Odontológico;nan;Grande;4947357;Odontologia de Grupo
+2026-03;Exclusivamente Odontológico;nan;Médio;1054404;Odontologia de Grupo
+2026-03;Exclusivamente Odontológico;nan;Pequeno;444741;Odontologia de Grupo
 2026-03;Médico-Hospitalar;Autogestão;Grande;2841910;
 2026-03;Médico-Hospitalar;Autogestão;Médio;1163093;
 2026-03;Médico-Hospitalar;Autogestão;Pequeno;545445;
@@ -271,6 +271,6 @@ DATA_REF;Visao;Modalidade;Porte;Beneficiarios_Ativos;MODALIDADE
 2026-03;Médico-Hospitalar;Medicina de Grupo;Pequeno;933409;
 2026-03;Médico-Hospitalar;Seguradora Especializada em Saúde;Grande;11373210;
 2026-03;Médico-Hospitalar;Seguradora Especializada em Saúde;Pequeno;7037;
-2026-03;Médico-Hospitalar;nan;Grande;2841910;Autogestão
-2026-03;Médico-Hospitalar;nan;Médio;1163093;Autogestão
-2026-03;Médico-Hospitalar;nan;Pequeno;7037;Seguradora Especializada em Saúde
+2026-03;Médico-Hospitalar;nan;Grande;2836942;Autogestão
+2026-03;Médico-Hospitalar;nan;Médio;1163435;Autogestão
+2026-03;Médico-Hospitalar;nan;Pequeno;155390;Filantropia
