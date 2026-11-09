@@ -254,9 +254,9 @@ DATA_REF;Visao;Modalidade;Porte;Beneficiarios_Ativos;MODALIDADE
 2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Grande;4845899;
 2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Médio;1070005;
 2026-03;Exclusivamente Odontológico;Odontologia de Grupo;Pequeno;430251;
-2026-03;Exclusivamente Odontológico;nan;Grande;4978586;Odontologia de Grupo
-2026-03;Exclusivamente Odontológico;nan;Médio;1057693;Odontologia de Grupo
-2026-03;Exclusivamente Odontológico;nan;Pequeno;436626;Odontologia de Grupo
+2026-03;Exclusivamente Odontológico;nan;Grande;5123052;Odontologia de Grupo
+2026-03;Exclusivamente Odontológico;nan;Médio;941185;Odontologia de Grupo
+2026-03;Exclusivamente Odontológico;nan;Pequeno;452766;Odontologia de Grupo
 2026-03;Médico-Hospitalar;Autogestão;Grande;2841910;
 2026-03;Médico-Hospitalar;Autogestão;Médio;1163093;
 2026-03;Médico-Hospitalar;Autogestão;Pequeno;545445;
@@ -271,6 +271,6 @@ DATA_REF;Visao;Modalidade;Porte;Beneficiarios_Ativos;MODALIDADE
 2026-03;Médico-Hospitalar;Medicina de Grupo;Pequeno;933409;
 2026-03;Médico-Hospitalar;Seguradora Especializada em Saúde;Grande;11373210;
 2026-03;Médico-Hospitalar;Seguradora Especializada em Saúde;Pequeno;7037;
-2026-03;Médico-Hospitalar;nan;Grande;397530;Filantropia
-2026-03;Médico-Hospitalar;nan;Médio;614001;Filantropia
-2026-03;Médico-Hospitalar;nan;Pequeno;549729;Autogestão
+2026-03;Médico-Hospitalar;nan;Grande;398341;Filantropia
+2026-03;Médico-Hospitalar;nan;Médio;610340;Filantropia
+2026-03;Médico-Hospitalar;nan;Pequeno;549257;Autogestão
